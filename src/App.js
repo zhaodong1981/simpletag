@@ -8,13 +8,10 @@ class App extends Component {
   };
 
   componentDidMount() {
-    fetch('https://v.zhaodong.name/api/link/',{headers: {
-      'Access-Control-Allow-Origin': 'http://localhost:3002/api/link'
-    }}
+    fetch('http://tag.zhaodong.name/api/link'
   ).then(res => res.json())
     .then((data) => {
-        this.setState({ bookmarks: data })
-        console.log(this.state.bookmarks);
+        this.setState({ bookmarks: data });
     })
     .catch(console.log)
   }
@@ -33,7 +30,37 @@ class App extends Component {
       <MaterialTable
       title="My bookmarks"
       columns={mycolumns}
-      data={mydata}
+      data={this.state.bookmarks}
+      
+      editable={{
+        onRowAdd: newData =>
+          new Promise(resolve => {
+            setTimeout(() => {
+              resolve();
+              const data = this.state.bookmarks;
+              data.push(newData);
+              this.setState({ bookmarks: data });
+            }, 600);
+          }),
+        onRowUpdate: (newData, oldData) =>
+          new Promise(resolve => {
+            setTimeout(() => {
+              resolve();
+              const data = this.state.bookmarks;
+              data[data.indexOf(oldData)] = newData;
+              this.setState({ bookmarks: data });
+            }, 600);
+          }),
+        onRowDelete: oldData =>
+          new Promise(resolve => {
+            setTimeout(() => {
+              resolve();
+              const data = this.state.bookmarks;
+              data.splice(data.indexOf(oldData), 1);
+              this.setState({ bookmarks: data });
+            }, 600);
+          }),
+      }}
     />
     </div>
     );
