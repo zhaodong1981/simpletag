@@ -15,13 +15,7 @@ class App extends Component {
   };
   
   componentDidMount() {
-    console.log("Pulling bookmarks ...");
-    fetch('http://tag.zhaodong.name/api/link')
-    .then(res => res.json())
-    .then((data) => {
-      this.setState({ bookmarks: data });
-      console.log(data);
-    })
+    this.refreshBookmarks();
   }
   refreshBookmarks(){
     console.log("Pulling bookmarks ...");
@@ -32,6 +26,7 @@ class App extends Component {
       console.log(data);
     })
     .catch(console.log)
+    
   }
 
   render() {
@@ -51,13 +46,50 @@ class App extends Component {
       
       <div className="App">
       <RefreshData> </RefreshData>
-      
       <TagButton Refresh={this.refreshBookmarks} state={this.state.bookmarks}></TagButton>
       <MaterialTable
       title="My bookmarks"
       tableRef={this.tableRef}
       columns={mycolumns}
       data={this.state.bookmarks}
+      
+      editable={{
+        onRowAdd: newData =>
+          new Promise(resolve => {
+            setTimeout(() => {
+              resolve();
+              const data = this.state.bookmarks;
+              data.push(newData);
+              this.setState({ bookmarks: data });
+            }, 600);
+          }),
+        onRowUpdate: (newData, oldData) =>
+          new Promise(resolve => {
+            setTimeout(() => {
+              resolve();
+              const data = this.state.bookmarks;
+              data[data.indexOf(oldData)] = newData;
+              this.setState({ bookmarks: data });
+            }, 600);
+          }),
+        onRowDelete: oldData =>
+          new Promise(resolve => {
+            setTimeout(() => {
+              resolve();
+              const data = this.state.bookmarks;
+              data.splice(data.indexOf(oldData), 1);
+              this.setState({ bookmarks: data });
+            }, 600);
+          }),
+      }}
+      actions={[
+        {
+          icon: 'refresh',
+          tooltip: 'Refresh Data',
+          isFreeAction: true,
+          onClick: () => this.tableRef.current && this.tableRef.current.onQueryChange(),
+        }
+      ]}
     />
     </div>
     );
