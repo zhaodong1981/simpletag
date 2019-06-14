@@ -60,7 +60,29 @@ class App extends Component {
           pageSizeOptions: [10,30,50],
           pageSize: 10,
           search: true,
-          searchFieldAlignment: 'right'
+          searchFieldAlignment: 'right',
+          actionsColumnIndex: -1
+        }}
+        
+        editable={{
+          onRowUpdate: (newData, oldData) =>
+            new Promise(resolve => {
+              setTimeout(() => {
+                resolve();
+                const data = this.state.bookmarks;
+                data[data.indexOf(oldData)] = newData;
+                this.setState({ bookmarks: data });
+              }, 600);
+            }),
+          onRowDelete: oldData =>
+            new Promise(resolve => {
+              setTimeout(() => {
+                resolve();
+                const data = this.state.bookmarks;
+                data.splice(data.indexOf(oldData), 1);
+                this.setState({ bookmarks: data });
+              }, 600);
+            }),
         }}
     />
     </div>
