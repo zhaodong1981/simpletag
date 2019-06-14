@@ -14,17 +14,17 @@ class App extends Component {
     this.refreshBookmarks = this.refreshBookmarks.bind(this);
   }
   refreshBookmarks(){
-      console.log("Pulling bookmarks");
       fetch('/api/link/count').then(res => res.json())
       .then((data) => {
         this.setState({ counter: data.count });
-          console.log("Count : " + this.state.counter);
       }).then(() => {
         return fetch('/api/link')
       }).then(res => res.json())
       .then((data) => {
         this.setState({ bookmarks: data });
-      })
+      }).catch(error => {
+        console.error('Error during refresh bookmark:', error);
+      });
     }
   
   createBookmark(title, url, description, tags){
@@ -82,12 +82,11 @@ class App extends Component {
   
   formatTags(oldtags){
     let tempTags = [];
-    if(typeof oldtags === 'undefined'){
-      
+    if(typeof oldtags !== 'undefined' && oldtags && oldtags.constructor === Array){
+      tempTags = oldtags;
     } else if (typeof oldtags === 'string'){
       tempTags = oldtags.split(',');
-      
-    }
+    } 
 
     let validTags = [];
     for (const tag of tempTags ){
@@ -95,18 +94,17 @@ class App extends Component {
         validTags.push(tag);
       }
     }
-    console.log("after split=" + validTags);
     return validTags;
   }
 
   render() {
     const mycolumns= [
       { title: 'Title', field: 'title' },
-      { title: 'URL', field: 'url',render: rowData => <a href={rowData.url} target="_blank">{rowData.url}</a> },
+      { title: 'URL', field: 'url',render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer">{rowData.url}</a> },
       { title: 'Date', field: 'modifydate'},
       { title: 'Tags', field: 'tags', render: rowData => 
       <div>{rowData.tags && rowData.tags.constructor === Array && rowData.tags.map((tag, index) => (
-            <a href={'/api/tag/'+tag} target="_blank">{tag}</a>
+            <a href={'/api/tag/'+tag} target="_blank" rel="noopener noreferrer">{tag}</a>
         ))}
       </div>
       }
@@ -139,8 +137,6 @@ class App extends Component {
               resolve();
               newData.tags = this.formatTags(newData.tags);
               newData.description = "test";
-              const data = this.state.bookmarks;
-              data.push(newData);
               this.createBookmark(newData.title,newData.url,newData.description,newData.tags);
               this.refreshBookmarks();
             }, 600);
