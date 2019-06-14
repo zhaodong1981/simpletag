@@ -38,7 +38,7 @@ class App extends Component {
       { title: 'URL', field: 'url',render: rowData => <a href={rowData.url} target="_blank">{rowData.url}</a> },
       { title: 'Date', field: 'modifydate'},
       { title: 'Tags', field: 'tags', render: rowData => 
-      <div>{rowData.tags.map((tag, index) => (
+      <div>{rowData.tags && rowData.tags.constructor === Array && rowData.tags.map((tag, index) => (
             <a href={'http://tag.zhaodong.name/api/tag/'+tag} target="_blank">{tag}</a>
         ))}
       </div>
@@ -69,6 +69,7 @@ class App extends Component {
             new Promise(resolve => {
               setTimeout(() => {
                 resolve();
+ //               console.log("Updating bookmark: " + oldData.id + ", url=" + oldData.url);
                 const data = this.state.bookmarks;
                 data[data.indexOf(oldData)] = newData;
                 this.setState({ bookmarks: data });
@@ -78,6 +79,7 @@ class App extends Component {
             new Promise(resolve => {
               setTimeout(() => {
                 resolve();
+  //              console.log("Deleting bookmark: " + oldData.id + ", url=" + oldData.url);
                 const data = this.state.bookmarks;
                 data.splice(data.indexOf(oldData), 1);
                 this.setState({ bookmarks: data });
