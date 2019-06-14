@@ -6,33 +6,31 @@ import TagButton from './TagButtons';
 class App extends Component {
   constructor(props) {
     super(props);
-
+    this.state = {
+      bookmarks : [],
+      counter : 100
+    };
     this.tableRef = React.createRef();
-  }
-  state = {
-    bookmarks : [],
-  };
-  
-  componentDidMount() {
-    console.log("Pulling bookmarks ...");
-    fetch('http://tag.zhaodong.name/api/link')
-    .then(res => res.json())
-    .then((data) => {
-      this.setState({ bookmarks: data });
-      console.log(data);
-    })
+    this.refreshBookmarks = this.refreshBookmarks.bind(this);
   }
   refreshBookmarks(){
-    console.log("Pulling bookmarks ...");
-    fetch('http://tag.zhaodong.name/api/link')
-    .then(res => res.json())
-    .then((data) => {
-      console.log(this.props.Mytable);
-     // this.props.Mytable.setState({ data: {data} });
-      console.log(data);
-    })
-    .catch(console.log)
+      console.log("Pulling bookmarks");
+      fetch('http://tag.zhaodong.name/api/link/count').then(res => res.json())
+      .then((data) => {
+        this.setState({ counter: data.count });
+          console.log("Count : " + this.state.counter);
+      }).then(() => {
+        return fetch('http://tag.zhaodong.name/api/link')
+      }).then(res => res.json())
+      .then((data) => {
+        this.setState({ bookmarks: data });
+      })
+    }
+  
+  componentDidMount() {
+    this.refreshBookmarks();
   }
+  
 
   render() {
     const mycolumns= [
@@ -46,41 +44,24 @@ class App extends Component {
       </div>
       }
     ];
-    const mydata=this.state.bookmarks;
+  
     return (
       
       <div className="App">
       
       <TagButton Refresh={this.refreshBookmarks}></TagButton>
+    
       <MaterialTable
-        title="My bookmarks"
+        title="My Bookmarks"
         tableRef={this.tableRef}
         columns={mycolumns}
-      //  data={mydata}
-        data={query =>
-          new Promise((resolve, reject) => {
-            let url = 'http://tag.zhaodong.name/api/link?'
-            url += 'per_page=' + query.pageSize
-            url += '&page=' + (query.page + 1)
-            fetch(url)
-              .then(response => response.json())
-              .then(result => {
-                resolve({
-                  data: result.data,
-                  page: result.page - 1,
-                  totalCount: result.total,
-                })
-              })
-          })
-        }
-        actions={[
-          {
-            icon: 'refresh',
-            tooltip: 'Refresh Data',
-            isFreeAction: true,
-            onClick: () => this.tableRef.current && this.tableRef.current.onQueryChange(),
-          }
-        ]}
+        data={this.state.bookmarks}
+        options={{
+          pageSizeOptions: [10,30,50],
+          pageSize: 30,
+          search: true,
+          searchFieldAlignment: 'right'
+        }}
     />
     </div>
     );

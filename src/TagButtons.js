@@ -18,7 +18,7 @@ render() {
       }));
 return(
         <div>
-            <Button variant="contained" color="primary" className={classes.button} onClick={this.props.Refresh.bind(this) }>
+            <Button variant="contained" color="primary" className={classes.button} onClick={this.props.Refresh }>
             Refresh
             </Button>
             <Fab size="medium" color="secondary" aria-label="Add" className={classes.margin} onClick={() => { console.log('Add'); }}>
