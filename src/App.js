@@ -61,10 +61,20 @@ class App extends Component {
           pageSize: 10,
           search: true,
           searchFieldAlignment: 'right',
-          actionsColumnIndex: -1
+          actionsColumnIndex: -1,
+          addRowPosition: 'first'
         }}
         
         editable={{
+          onRowAdd: newData =>
+          new Promise(resolve => {
+            setTimeout(() => {
+              resolve();
+              const data = this.state.bookmarks;
+              data.push(newData);
+              this.setState({ bookmarks: data });
+            }, 600);
+          }),
           onRowUpdate: (newData, oldData) =>
             new Promise(resolve => {
               setTimeout(() => {
