@@ -135,10 +135,15 @@ class App extends Component {
           new Promise(resolve => {
             setTimeout(() => {
               resolve();
-              newData.tags = this.formatTags(newData.tags);
-              newData.description = "test";
-              this.createBookmark(newData.title,newData.url,newData.description,newData.tags);
-              this.refreshBookmarks();
+              if(typeof newData.url == 'undefined' || newData.url === '' || newData.url === null ){
+                alert("Invalid URL");
+              }else{
+                newData.tags = this.formatTags(newData.tags);
+                newData.description = "test";
+                this.createBookmark(newData.title,newData.url,newData.description,newData.tags);
+                this.refreshBookmarks();
+              }
+             
             }, 600);
               
           }),
@@ -146,12 +151,16 @@ class App extends Component {
             new Promise(resolve => {
               setTimeout(() => {
                 resolve();
-                newData.tags = this.formatTags(newData.tags);
-                newData.description = "test";
-                const data = this.state.bookmarks;
-                data[data.indexOf(oldData)] = newData;
-                this.setState({ bookmarks: data });
-                this.updateBookmark(oldData.id, newData.title,newData.url,newData.description,newData.tags);
+                if(typeof newData.url == 'undefined' || newData.url === '' || newData.url === null){
+                  alert("Invalid URL");
+                }else{
+                  newData.tags = this.formatTags(newData.tags);
+                  newData.description = "test";
+                  const data = this.state.bookmarks;
+                  data[data.indexOf(oldData)] = newData;
+                  this.setState({ bookmarks: data });
+                  this.updateBookmark(oldData.id, newData.title,newData.url,newData.description,newData.tags);
+                }
               }, 600);
             }),
           onRowDelete: oldData =>

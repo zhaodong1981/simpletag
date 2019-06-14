@@ -2,6 +2,7 @@
   "name": "simpletag",
   "version": "0.1.0",
   "private": true,
+  "homepage" : ".",
   "dependencies": {
     "material-table": "^1.39.0",
     "@material-ui/icons": "latest",
