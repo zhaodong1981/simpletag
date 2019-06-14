@@ -15,12 +15,12 @@ class App extends Component {
   }
   refreshBookmarks(){
       console.log("Pulling bookmarks");
-      fetch('http://tag.zhaodong.name/api/link/count').then(res => res.json())
+      fetch('/api/link/count').then(res => res.json())
       .then((data) => {
         this.setState({ counter: data.count });
           console.log("Count : " + this.state.counter);
       }).then(() => {
-        return fetch('http://tag.zhaodong.name/api/link')
+        return fetch('/api/link')
       }).then(res => res.json())
       .then((data) => {
         this.setState({ bookmarks: data });
@@ -29,7 +29,7 @@ class App extends Component {
   
   createBookmark(title, url, description, userID, tags){
       console.log("Create a bookmark: title=" + title + ",url="+url + ",description="+description + ",user_id=" + userID + ",tags=" + tags);
-      fetch('http://tag.zhaodong.name/api/link/create', {
+      fetch('/api/link/create', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -49,7 +49,7 @@ class App extends Component {
     }
     updateBookmark(link_id,title, url, description, userID, tags){
       console.log("Update a bookmark: id="+link_id + ", title=" + title + ",url="+url + ",description="+description + ",user_id=" + userID + ",tags=" + tags);
-      fetch('http://tag.zhaodong.name/api/link/'+link_id, {
+      fetch('/api/link/'+link_id, {
         method: 'PUT',
         headers: {
           'Accept': 'application/json',
@@ -70,7 +70,7 @@ class App extends Component {
 
     deleteBookmark(link_id){
       console.log("Delete a bookmark: id="+link_id);
-      fetch('http://tag.zhaodong.name/api/link/'+link_id, {
+      fetch('/api/link/'+link_id, {
         method: 'DELETE'
       }
       ).catch(error => {
@@ -108,7 +108,7 @@ class App extends Component {
       { title: 'Date', field: 'modifydate'},
       { title: 'Tags', field: 'tags', render: rowData => 
       <div>{rowData.tags && rowData.tags.constructor === Array && rowData.tags.map((tag, index) => (
-            <a href={'http://tag.zhaodong.name/api/tag/'+tag} target="_blank">{tag}</a>
+            <a href={'/api/tag/'+tag} target="_blank">{tag}</a>
         ))}
       </div>
       }
