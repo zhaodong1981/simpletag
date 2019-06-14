@@ -58,7 +58,7 @@ class App extends Component {
         data={this.state.bookmarks}
         options={{
           pageSizeOptions: [10,30,50],
-          pageSize: 30,
+          pageSize: 10,
           search: true,
           searchFieldAlignment: 'right'
         }}
