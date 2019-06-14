@@ -27,6 +27,27 @@ class App extends Component {
       })
     }
   
+  createBookmark(title, url, description, userID, tags){
+      console.log("Create a bookmark: title=" + title + ",url="+url + ",description="+description + ",user_id=" + userID + ",tags=" + tags);
+      fetch('http://tag.zhaodong.name/api/link/create', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          'title': title,
+          'url': url,
+          'description': description,
+          'user_id': userID,
+          'tags': tags          
+        })
+      }
+      ).catch(error => {
+        console.error('Error during create bookmark:', error);
+      });
+    }
+  
   componentDidMount() {
     this.refreshBookmarks();
   }
@@ -70,10 +91,18 @@ class App extends Component {
           new Promise(resolve => {
             setTimeout(() => {
               resolve();
+              if (typeof newData.tags !== 'undefined'){
+                newData.tags=newData.tags.split(',');
+                console.log("after split="+newData.tags);
+                newData.description = "test";
+                newData.user_id = 2;
+              }
               const data = this.state.bookmarks;
               data.push(newData);
-              this.setState({ bookmarks: data });
+              this.createBookmark(newData.title,newData.url,newData.description,newData.user_id,newData.tags);
+              this.refreshBookmarks();
             }, 600);
+              
           }),
           onRowUpdate: (newData, oldData) =>
             new Promise(resolve => {
