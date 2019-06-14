@@ -64,7 +64,17 @@ class App extends Component {
         })
       }
       ).catch(error => {
-        console.error('Error during create bookmark:', error);
+        console.error('Error during update bookmark:', error);
+      });
+    }
+
+    deleteBookmark(link_id){
+      console.log("Delete a bookmark: id="+link_id);
+      fetch('http://tag.zhaodong.name/api/link/'+link_id, {
+        method: 'DELETE'
+      }
+      ).catch(error => {
+        console.error('Error during delete bookmark:', error);
       });
     }
 
@@ -158,9 +168,8 @@ class App extends Component {
               setTimeout(() => {
                 resolve();
   //              console.log("Deleting bookmark: " + oldData.id + ", url=" + oldData.url);
-                const data = this.state.bookmarks;
-                data.splice(data.indexOf(oldData), 1);
-                this.setState({ bookmarks: data });
+                  this.deleteBookmark(oldData.id);
+                  this.refreshBookmarks();
               }, 600);
             }),
         }}
