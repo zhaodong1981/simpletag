@@ -47,11 +47,49 @@ class App extends Component {
         console.error('Error during create bookmark:', error);
       });
     }
-  
+    updateBookmark(link_id,title, url, description, userID, tags){
+      console.log("Update a bookmark: id="+link_id + ", title=" + title + ",url="+url + ",description="+description + ",user_id=" + userID + ",tags=" + tags);
+      fetch('http://tag.zhaodong.name/api/link/'+link_id, {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          'title': title,
+          'url': url,
+          'description': description,
+          'user_id': userID,
+          'tags': tags          
+        })
+      }
+      ).catch(error => {
+        console.error('Error during create bookmark:', error);
+      });
+    }
+
   componentDidMount() {
     this.refreshBookmarks();
   }
   
+  formatTags(oldtags){
+    let tempTags = [];
+    if(typeof oldtags === 'undefined'){
+      
+    } else if (typeof oldtags === 'string'){
+      tempTags = oldtags.split(',');
+      
+    }
+
+    let validTags = [];
+    for (const tag of tempTags ){
+      if (tag !== ''){
+        validTags.push(tag);
+      }
+    }
+    console.log("after split=" + validTags);
+    return validTags;
+  }
 
   render() {
     const mycolumns= [
@@ -91,12 +129,10 @@ class App extends Component {
           new Promise(resolve => {
             setTimeout(() => {
               resolve();
-              if (typeof newData.tags !== 'undefined'){
-                newData.tags=newData.tags.split(',');
-                console.log("after split="+newData.tags);
-                newData.description = "test";
-                newData.user_id = 2;
-              }
+              newData.tags = this.formatTags(newData.tags);
+              newData.description = "test";
+              newData.user_id = 2;
+
               const data = this.state.bookmarks;
               data.push(newData);
               this.createBookmark(newData.title,newData.url,newData.description,newData.user_id,newData.tags);
@@ -108,10 +144,13 @@ class App extends Component {
             new Promise(resolve => {
               setTimeout(() => {
                 resolve();
- //               console.log("Updating bookmark: " + oldData.id + ", url=" + oldData.url);
+                newData.tags = this.formatTags(newData.tags);
+                newData.description = "test";
+                newData.user_id = 2;
                 const data = this.state.bookmarks;
                 data[data.indexOf(oldData)] = newData;
                 this.setState({ bookmarks: data });
+                this.updateBookmark(oldData.id, newData.title,newData.url,newData.description,newData.user_id,newData.tags);
               }, 600);
             }),
           onRowDelete: oldData =>
