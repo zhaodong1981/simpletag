@@ -15,8 +15,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body style="width: 600px">
-  <h1>All links </h2>
-  <div ng-app = "mainApp" ng-controller = "bookmarkController" >
+   <div ng-app = "mainApp" ng-controller = "bookmarkController" >
     <div class="table-responsive">
     <table class="table table-striped table-borderless table-sm">
       <thead class="thead-light">
@@ -32,7 +31,7 @@
           <td><a href="{{ bookmark.url }}" target="_blank" >{{ bookmark.url }}"</a></td>
           <td>
                   <span ng-repeat="tag in bookmark.tags"> 
-                      <a href="https://v.zhaodong.name/api/link/search?tag={{ tag }}" target="_blank" >{{ tag }}</a> 
+                      <a href="https://v.zhaodong.name/tag/tag.html#?name={{tag}}" target="_blank" >{{ tag }}</a> 
                   </span>
           </td>
        </tr>
