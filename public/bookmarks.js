@@ -4,11 +4,14 @@ var mainApp = angular.module("mainApp", []);
 
 mainApp.controller('bookmarkController', function($scope, $http, $location) {
    var tag = $location.search().name;
-   $scope.bookmarks = [];
+   if(typeof tag != 'undefined' && tag != '' && tag != null ){
+      tag = encodeURIComponent(tag);
+      $scope.bookmarks = [];
    //only get the recently modified 50 bookmakrs
-   $http.get('/api/link/search?tag='+tag).then(function (result) {
-      $scope.bookmarks =result.data;
-   });
+      $http.get('/api/link/search?tag='+tag).then(function (result) {
+         $scope.bookmarks =result.data;
+      });
+   }
    
 });
 
