@@ -18,10 +18,6 @@ return(
               <RefreshIcon className={classes.rightIcon} />
               Refresh
             </Button>
-            <Button variant="contained" color="primary" className={classes.button} >
-              <CreateIcon className={classes.rightIcon} />
-              Create
-            </Button>
         </div>
   );
   }
