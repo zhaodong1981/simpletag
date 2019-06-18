@@ -99,12 +99,12 @@ class App extends Component {
 
   render() {
     const mycolumns= [
-      { title: 'Title', field: 'title' },
+      { title: 'Title', field: 'title', render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer">{rowData.title}</a>},
       { title: 'URL', field: 'url',render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer">{rowData.url}</a> },
       { title: 'Date', field: 'modifydate'},
       { title: 'Tags', field: 'tags', render: rowData => 
       <div>{rowData.tags && rowData.tags.constructor === Array && rowData.tags.map((tag, index) => (
-            <a href={'/api/tag/'+tag} target="_blank" rel="noopener noreferrer">{tag}</a>
+            <a href={'/tag/tag.html#?name='+tag} target="_blank" rel="noopener noreferrer">{tag}</a>
         ))}
       </div>
       }
