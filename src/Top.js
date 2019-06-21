@@ -13,7 +13,7 @@ class Top extends React.Component {
                     <div className="col-sm-8 col-sm-offset-2">
                         <Router>
                             <div>
-                                <PrivateRoute exact path="/" component={HomePage} />
+                                <PrivateRoute exact path="/tag" component={HomePage} />
                                 <Route path="/login" component={LoginPage} />
                             </div>
                         </Router>
