@@ -15,16 +15,6 @@ class App extends Component {
     this.refreshBookmarks = this.refreshBookmarks.bind(this);
   }
 
-  login(next){
-    let username = "test";
-    let password = "test";
-    userService.login(username,password).then((user) => {
-      next();
-    }).catch(error => {
-      console.error('Login failed:', error);
-    });
-  }
-
   refreshBookmarks(){
     const requestOptions = {
       method: 'GET',
@@ -98,8 +88,10 @@ class App extends Component {
     }
 
   componentDidMount() {
-    console.log("login ... ")
-    this.login(this.refreshBookmarks);
+  //  console.log("login ... ")
+   // this.login(this.refreshBookmarks);
+
+    this.refreshBookmarks();
   }
   
   formatTags(oldtags){
