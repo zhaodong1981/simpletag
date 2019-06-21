@@ -2,13 +2,14 @@
   "name": "simpletag",
   "version": "0.1.0",
   "private": true,
-  "homepage" : ".",
+  "homepage": ".",
   "dependencies": {
-    "material-table": "^1.39.0",
-    "@material-ui/icons": "latest",
     "@material-ui/core": "latest",
+    "@material-ui/icons": "latest",
+    "material-table": "^1.39.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1"
   },
   "scripts": {

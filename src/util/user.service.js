@@ -47,7 +47,7 @@ function handleResponse(response) {
                 logout();
         //        location.reload(true);
             }
-
+            console.log("response.ok " + response.ok);
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
         }
