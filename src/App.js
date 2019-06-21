@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './App.css';
 import MaterialTable from 'material-table';
 import TagButton from './TagButtons';
+import {userService} from './util/user.service'
 
 class App extends Component {
   constructor(props) {
@@ -13,12 +14,27 @@ class App extends Component {
     this.tableRef = React.createRef();
     this.refreshBookmarks = this.refreshBookmarks.bind(this);
   }
+
+  login(next){
+    let username = "test";
+    let password = "test";
+    userService.login(username,password).then((user) => {
+      next();
+    }).catch(error => {
+      console.error('Login failed:', error);
+    });
+  }
+
   refreshBookmarks(){
-      fetch('/api/link/count').then(res => res.json())
+    const requestOptions = {
+      method: 'GET',
+      headers: {'Authorization': 'Bearer ' + userService.getToken() }
+    };
+      fetch('/api/link/count',requestOptions).then(res => res.json())
       .then((data) => {
         this.setState({ counter: data.count });
       }).then(() => {
-        return fetch('/api/link')
+        return fetch('/api/link',requestOptions)
       }).then(res => res.json())
       .then((data) => {
         this.setState({ bookmarks: data });
@@ -28,12 +44,13 @@ class App extends Component {
     }
   
   createBookmark(title, url, description, tags){
-      console.log("Create a bookmark: title=" + title + ",url="+url + ",description="+description  + ",tags=" + tags);
+    //  console.log("Create a bookmark: title=" + title + ",url="+url + ",description="+description  + ",tags=" + tags);
       fetch('/api/link/create', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + userService.getToken()
         },
         body: JSON.stringify({
           'title': title,
@@ -53,6 +70,7 @@ class App extends Component {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + userService.getToken()
         },
         body: JSON.stringify({
           'title': title,
@@ -69,7 +87,10 @@ class App extends Component {
     deleteBookmark(link_id){
       console.log("Delete a bookmark: id="+link_id);
       fetch('/api/link/'+link_id, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Authorization': 'Bearer ' + userService.getToken()
+        },
       }
       ).catch(error => {
         console.error('Error during delete bookmark:', error);
@@ -77,7 +98,8 @@ class App extends Component {
     }
 
   componentDidMount() {
-    this.refreshBookmarks();
+    console.log("login ... ")
+    this.login(this.refreshBookmarks);
   }
   
   formatTags(oldtags){
