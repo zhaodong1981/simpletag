@@ -14,7 +14,7 @@ render() {
       }));
 return(
         <div>
-            <Link to="/login">Logout</Link>
+            <Link to="/login/">Logout</Link>
             <Button variant="contained" color="primary" className={classes.button} onClick={this.props.Refresh}>
               <RefreshIcon className={classes.rightIcon} />
               Refresh

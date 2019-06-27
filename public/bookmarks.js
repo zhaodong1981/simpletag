@@ -20,7 +20,7 @@ mainApp.controller('bookmarkController', function($scope, $http, $location,$wind
             $scope.bookmarks =result.data;
          });
       } else{
-         $window.location.href = '/login';
+         $window.location.href = '/login/';
        //  $location.path('/login');
 
       }
