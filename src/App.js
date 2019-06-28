@@ -118,7 +118,7 @@ class App extends Component {
       { title: 'Date', field: 'modifydate'},
       { title: 'Tags', field: 'tags', render: rowData => 
       <div>{rowData.tags && rowData.tags.constructor === Array && rowData.tags.map((tag, index) => (
-            <a href={'/tag/tag.html#?name='+tag} target="_blank" rel="noopener noreferrer">{tag}</a>
+          <a href={'/tag/tag.html#?name='+tag} target="_blank" rel="noopener noreferrer" style={{marginRight: '10px'}}>{tag}</a>
         ))}
       </div>
       }
