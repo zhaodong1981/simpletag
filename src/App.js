@@ -15,23 +15,22 @@ class App extends Component {
     this.refreshBookmarks = this.refreshBookmarks.bind(this);
   }
 
-  refreshBookmarks(){
+  refreshBookmarks(keywords){
     const requestOptions = {
       method: 'GET',
       headers: {'Authorization': 'Bearer ' + userService.getToken() }
     };
-      fetch('/api/link/count',requestOptions).then(res => res.json())
-      .then((data) => {
-        this.setState({ counter: data.count });
-      }).then(() => {
-        return fetch('/api/link',requestOptions)
-      }).then(res => res.json())
-      .then((data) => {
-        this.setState({ bookmarks: data });
-      }).catch(error => {
-        console.error('Error during refresh bookmark:', error);
-      });
-    }
+      if(typeof keywords != 'undefined' && keywords != '' && keywords != null ){
+          keywords = encodeURIComponent(keywords);
+          fetch('/api/link/search?q=' + keywords,requestOptions).then(res => res.json())
+        .then((data) => {this.setState({ bookmarks: data });
+       });
+      }else { // show bookmarks
+        fetch('/api/link?per_page=500&page=1',requestOptions).then(res => res.json())
+        .then((result) => {this.setState({ bookmarks: result.data });
+       });
+      }
+  }
   
   createBookmark(title, url, description, tags){
     //  console.log("Create a bookmark: title=" + title + ",url="+url + ",description="+description  + ",tags=" + tags);
@@ -110,8 +109,36 @@ class App extends Component {
     }
     return validTags;
   }
-
+  handleChangeKeywords(event){
+    alert(event.target.value);
+  }
   render() {
+    /*
+    const useStyles = makeStyles(theme => ({
+      container: {
+        display: 'flex',
+        flexWrap: 'wrap',
+      },
+      textField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        width: 200,
+      },
+      dense: {
+        marginTop: 19,
+      },
+      menu: {
+        width: 200,
+      },
+    }));
+    const classes = useStyles();
+  const [values, setValues] = React.useState({
+    name: 'Cat in the Hat',
+    age: '',
+    multiline: 'Controlled',
+    currency: 'EUR',
+  });
+  */
     const mycolumns= [
       { title: 'Title', field: 'title', render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer">{rowData.title}</a>},
       { title: 'URL', field: 'url',render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer">{rowData.url}</a> },
@@ -127,7 +154,6 @@ class App extends Component {
     return (
       
       <div className="App">
-      
       <TagButton Refresh={this.refreshBookmarks}></TagButton>
     
       <MaterialTable
