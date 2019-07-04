@@ -26,7 +26,7 @@ class App extends Component {
         .then((data) => {this.setState({ bookmarks: data });
        });
       }else { // show bookmarks
-        fetch('/api/link?per_page=500&page=1',requestOptions).then(res => res.json())
+        fetch('/api/link?per_page=100&page=1',requestOptions).then(res => res.json())
         .then((result) => {this.setState({ bookmarks: result.data });
        });
       }
@@ -113,32 +113,7 @@ class App extends Component {
     alert(event.target.value);
   }
   render() {
-    /*
-    const useStyles = makeStyles(theme => ({
-      container: {
-        display: 'flex',
-        flexWrap: 'wrap',
-      },
-      textField: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
-        width: 200,
-      },
-      dense: {
-        marginTop: 19,
-      },
-      menu: {
-        width: 200,
-      },
-    }));
-    const classes = useStyles();
-  const [values, setValues] = React.useState({
-    name: 'Cat in the Hat',
-    age: '',
-    multiline: 'Controlled',
-    currency: 'EUR',
-  });
-  */
+  
     const mycolumns= [
       { title: 'Title', field: 'title', render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer">{rowData.title}</a>},
       { title: 'URL', field: 'url',render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer">{rowData.url}</a> },
