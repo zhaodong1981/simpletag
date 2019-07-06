@@ -26,7 +26,7 @@ class App extends Component {
         .then((data) => {this.setState({ bookmarks: data });
        });
       }else { // show bookmarks latest modified 100 bookmarks
-        fetch('/api/link?limit=10',requestOptions).then(res => res.json())
+        fetch('/api/link?limit=100',requestOptions).then(res => res.json())
         .then((result) => {this.setState({ bookmarks: result });
        });
       }
