@@ -25,9 +25,9 @@ class App extends Component {
           fetch('/api/link/search?q=' + keywords,requestOptions).then(res => res.json())
         .then((data) => {this.setState({ bookmarks: data });
        });
-      }else { // show bookmarks
-        fetch('/api/link?per_page=100&page=1',requestOptions).then(res => res.json())
-        .then((result) => {this.setState({ bookmarks: result.data });
+      }else { // show bookmarks latest modified 100 bookmarks
+        fetch('/api/link?limit=10',requestOptions).then(res => res.json())
+        .then((result) => {this.setState({ bookmarks: result });
        });
       }
   }
