@@ -42,10 +42,9 @@ return(
         <div>
              <input type="text" className="App-keywords" ref={(c) => this.keywords = c} name="keywords" />
       
-            <Button variant="contained" color="primary" className={classes.button} onClick={this.onSearch}>
-              <RefreshIcon className={classes.rightIcon} />
-              Reload
-            </Button>
+            <button type ="button" variant="contained" color="primary" className={classes.button} onClick={this.onSearch}>
+            Search
+            </button>
             <Link to="/login/">Logout</Link>
         </div>
   );
