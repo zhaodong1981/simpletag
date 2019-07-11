@@ -139,7 +139,7 @@ class App extends Component {
         options={{
           pageSizeOptions: [10,30,50],
           pageSize: 10,
-          search: true,
+          search: false,
           searchFieldAlignment: 'right',
           actionsColumnIndex: -1,
           addRowPosition: 'first'
