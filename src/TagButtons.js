@@ -40,9 +40,9 @@ render() {
       }));
 return(
         <div>
-             <input type="text" className="App-keywords" ref={(c) => this.keywords = c} name="keywords" />
+             <input type="text" placeholder="Input keywords to search" ref={(c) => this.keywords = c} name="keywords" />
       
-            <button type ="button" variant="contained" color="primary" className={classes.button} onClick={this.onSearch}>
+            <button type ="button" onClick={this.onSearch}>
             Search
             </button>
             <Link to="/login/">Logout</Link>
