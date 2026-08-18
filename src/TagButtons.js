@@ -64,7 +64,7 @@ return(
                  size="small"
                  value={this.state.searchText}
                  onChange={this.handleInputChange}
-                 style={{marginRight: 8, width: 240, minWidth: 240, boxSizing: 'border-box'}}
+                 style={{marginRight: 8, width: 480, minWidth: 480, boxSizing: 'border-box'}}
                  inputProps={{ maxLength: 500 }}
                  InputProps={{
                    style: { height: 36 },
@@ -83,7 +83,7 @@ return(
                  }}
                />
 
-              <Button variant="contained" color="primary" size="small" onClick={this.onSearch} style={{minWidth: 240}}>
+              <Button variant="contained" color="primary" size="small" onClick={this.onSearch} style={{minWidth: 120}}>
               Search
               </Button>
             </div>
