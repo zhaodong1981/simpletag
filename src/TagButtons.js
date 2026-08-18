@@ -86,6 +86,9 @@ return(
               <Button variant="contained" color="primary" size="small" onClick={this.onSearch} style={{minWidth: 120}}>
               Search
               </Button>
+              <Button variant="outlined" color="default" size="small" onClick={() => this.props.Refresh('__all__')} style={{marginLeft: 8}}>
+              显示所有
+              </Button>
             </div>
             <div style={{paddingRight: 12}}><Link to="/login/">Logout</Link></div>
         </div>

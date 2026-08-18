@@ -28,6 +28,12 @@ class App extends Component {
       method: 'GET',
       headers: {'Authorization': 'Bearer ' + userService.getToken() }
     };
+      if (keywords === '__all__') {
+        fetch('/api/link',requestOptions).then(res => res.json())
+        .then((data) => {this.setState({ bookmarks: data, selectedRows: [], currentPage: 0 });
+       });
+        return;
+      }
       if(typeof keywords != 'undefined' && keywords != '' && keywords != null ){
           keywords = encodeURIComponent(keywords);
           fetch('/api/link/search?q=' + keywords,requestOptions).then(res => res.json())
