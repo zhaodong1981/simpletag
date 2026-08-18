@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import MaterialTable from 'material-table';
+import Button from '@material-ui/core/Button';
 import TagButton from './TagButtons';
 import {userService} from './util/user.service'
 
@@ -19,6 +20,7 @@ class App extends Component {
     this.selectCurrentPage = this.selectCurrentPage.bind(this);
     this.deleteSelectedBookmarks = this.deleteSelectedBookmarks.bind(this);
     this.toggleSelectAllCurrentPage = this.toggleSelectAllCurrentPage.bind(this);
+    this.handleAddClick = this.handleAddClick.bind(this);
   }
 
   refreshBookmarks(keywords){
@@ -68,6 +70,17 @@ class App extends Component {
       const toAdd = currentRows.filter(r => !selectedIds.has(r.id));
       this.setState({ selectedRows: selectedRows.concat(toAdd) });
     }
+  }
+
+  handleAddClick() {
+    const title = window.prompt('Title:');
+    if (!title) return;
+    const url = window.prompt('URL:');
+    if (!url) return;
+    const tagsInput = window.prompt('Tags (comma separated):', '');
+    const tags = this.formatTags(tagsInput);
+    this.createBookmark(title, url, 'created via toolbar', tags);
+    setTimeout(() => this.refreshBookmarks(), 300);
   }
 
   selectCurrentPage() {
@@ -212,14 +225,24 @@ class App extends Component {
     const mycolumns= [
       {
         title: (
-          <input
-            type="checkbox"
-            checked={this.isAllCurrentPageSelected()}
-            onChange={this.toggleSelectAllCurrentPage}
-            aria-label={'全选当前页'}
-          />
+          <div style={{display: 'flex', alignItems: 'center'}}>
+            <input
+              type="checkbox"
+              checked={this.isAllCurrentPageSelected()}
+              onChange={this.toggleSelectAllCurrentPage}
+              aria-label={'全选当前页'}
+            />
+            <button
+              onClick={this.deleteSelectedBookmarks}
+              disabled={this.state.selectedRows.length === 0}
+              style={{marginLeft: 8}}
+            >
+              删除
+            </button>
+          </div>
         ),
         width: 70,
+        draggable: false,
         sorting: false,
         render: rowData => (
           <input
@@ -247,7 +270,14 @@ class App extends Component {
       <TagButton Refresh={this.refreshBookmarks}></TagButton>
     
       <MaterialTable
-        title="My Bookmarks"
+        title={(
+          <span>
+            My Bookmarks
+            <Button size="small" variant="contained" color="primary" style={{marginLeft: 12}} onClick={this.handleAddClick}>
+              Add
+            </Button>
+          </span>
+        )}
         tableRef={this.tableRef}
         columns={mycolumns}
         data={this.state.bookmarks}
@@ -263,22 +293,7 @@ class App extends Component {
         }}
         onChangePage={(page) => this.setState({ currentPage: page })}
         onChangeRowsPerPage={(pageSize) => this.setState({ pageSize, currentPage: 0 })}
-        actions={[
-          {
-            icon: 'check',
-            tooltip: '全选当前页',
-            isFreeAction: true,
-            disabled: this.state.bookmarks.length === 0,
-            onClick: this.selectCurrentPage
-          },
-          {
-            icon: 'delete',
-            tooltip: '删除所有选中行',
-            isFreeAction: true,
-            disabled: this.state.selectedRows.length === 0,
-            onClick: this.deleteSelectedBookmarks
-          }
-        ]}
+        actions={[]}
         editable={{
           onRowAdd: newData =>
           new Promise(resolve => {
