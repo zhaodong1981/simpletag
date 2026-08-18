@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import './App.css';
 import MaterialTable from 'material-table';
-import Button from '@material-ui/core/Button';
 import TagButton from './TagButtons';
 import {userService} from './util/user.service'
 
@@ -20,7 +19,6 @@ class App extends Component {
     this.selectCurrentPage = this.selectCurrentPage.bind(this);
     this.deleteSelectedBookmarks = this.deleteSelectedBookmarks.bind(this);
     this.toggleSelectAllCurrentPage = this.toggleSelectAllCurrentPage.bind(this);
-    this.handleAddClick = this.handleAddClick.bind(this);
   }
 
   refreshBookmarks(keywords){
@@ -72,16 +70,7 @@ class App extends Component {
     }
   }
 
-  handleAddClick() {
-    const title = window.prompt('Title:');
-    if (!title) return;
-    const url = window.prompt('URL:');
-    if (!url) return;
-    const tagsInput = window.prompt('Tags (comma separated):', '');
-    const tags = this.formatTags(tagsInput);
-    this.createBookmark(title, url, 'created via toolbar', tags);
-    setTimeout(() => this.refreshBookmarks(), 300);
-  }
+  
 
   selectCurrentPage() {
     if (!this.state.bookmarks.length) {
@@ -270,14 +259,7 @@ class App extends Component {
       <TagButton Refresh={this.refreshBookmarks}></TagButton>
     
       <MaterialTable
-        title={(
-          <span>
-            My Bookmarks
-            <Button size="small" variant="contained" color="primary" style={{marginLeft: 12}} onClick={this.handleAddClick}>
-              Add
-            </Button>
-          </span>
-        )}
+        title="My Bookmarks"
         tableRef={this.tableRef}
         columns={mycolumns}
         data={this.state.bookmarks}
@@ -295,22 +277,6 @@ class App extends Component {
         onChangeRowsPerPage={(pageSize) => this.setState({ pageSize, currentPage: 0 })}
         actions={[]}
         editable={{
-          onRowAdd: newData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              if(typeof newData.url == 'undefined' || newData.url === '' || newData.url === null ){
-                alert("Invalid URL");
-              }else{
-                newData.tags = this.formatTags(newData.tags);
-                newData.description = "test";
-                this.createBookmark(newData.title,newData.url,newData.description,newData.tags);
-                this.refreshBookmarks();
-              }
-             
-            }, 600);
-              
-          }),
           onRowUpdate: (newData, oldData) =>
             new Promise(resolve => {
               setTimeout(() => {
