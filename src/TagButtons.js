@@ -54,37 +54,40 @@ render() {
         }
       }));
 return(
-        <div style={{textAlign: 'center', marginBottom: 12}}>
-            <div style={{display: 'inline-flex', alignItems: 'center'}}>
-             <TextField
-               placeholder="Input keywords to search"
-               name="keywords"
-               variant="outlined"
-               size="small"
-               value={this.state.searchText}
-               onChange={this.handleInputChange}
-               style={{marginRight: 8}}
-               InputProps={{
-                 startAdornment: (
-                   <InputAdornment position="start">
-                     <SearchIcon />
-                   </InputAdornment>
-                 ),
-                 endAdornment: (
-                   <InputAdornment position="end">
-                     <IconButton size="small" onClick={this.handleClear} aria-label="清除">
-                       <ClearIcon />
-                     </IconButton>
-                   </InputAdornment>
-                 )
-               }}
-             />
+        <div style={{position: 'relative', padding: 8}}>
+            <div style={{position: 'absolute', left: '50%', transform: 'translateX(-50%)', top: 8}}>
+              <div style={{display: 'inline-flex', alignItems: 'center'}}>
+               <TextField
+                 placeholder="Input keywords to search"
+                 name="keywords"
+                 variant="outlined"
+                 size="small"
+                 value={this.state.searchText}
+                 onChange={this.handleInputChange}
+                 style={{marginRight: 8, width: 120}}
+                 inputProps={{ maxLength: 500 }}
+                 InputProps={{
+                   startAdornment: (
+                     <InputAdornment position="start">
+                       <SearchIcon />
+                     </InputAdornment>
+                   ),
+                   endAdornment: (
+                     <InputAdornment position="end">
+                       <IconButton size="small" onClick={this.handleClear} aria-label="清除">
+                         <ClearIcon />
+                       </IconButton>
+                     </InputAdornment>
+                   )
+                 }}
+               />
 
-            <Button variant="contained" color="primary" size="small" onClick={this.onSearch}>
-            Search
-            </Button>
+              <Button variant="contained" color="primary" size="small" onClick={this.onSearch} style={{minWidth: 120}}>
+              Search
+              </Button>
+              </div>
             </div>
-            <div style={{marginTop: 8}}><Link to="/login/">Logout</Link></div>
+            <div style={{position: 'absolute', right: 12, top: 8}}><Link to="/login/">Logout</Link></div>
         </div>
   );
   }
