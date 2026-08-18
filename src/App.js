@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import './App.css';
 import MaterialTable from 'material-table';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 import TagButton from './TagButtons';
 import {userService} from './util/user.service'
 
@@ -221,13 +223,15 @@ class App extends Component {
               onChange={this.toggleSelectAllCurrentPage}
               aria-label={'全选当前页'}
             />
-            <button
+            <IconButton
               onClick={this.deleteSelectedBookmarks}
               disabled={this.state.selectedRows.length === 0}
+              aria-label="删除选中"
+              size="small"
               style={{marginLeft: 8}}
             >
-              删除
-            </button>
+              <DeleteIcon />
+            </IconButton>
           </div>
         ),
         width: 70,

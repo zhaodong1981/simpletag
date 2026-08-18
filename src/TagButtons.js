@@ -4,6 +4,10 @@ import Button from '@material-ui/core/Button';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { Link } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import SearchIcon from '@material-ui/icons/Search';
+import ClearIcon from '@material-ui/icons/Clear';
 
 
 class TagButtons extends Component {
@@ -12,10 +16,13 @@ class TagButtons extends Component {
     this.onSearch = this.onSearch.bind(this);
     this.handleEnter = this.handleEnter.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleClear = this.handleClear.bind(this);
+    this.state = { searchText: '' };
   }
   onSearch(e) {
     e.preventDefault();
-    this.props.Refresh(this.keywords.value);
+    this.props.Refresh(this.state.searchText);
   }
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyPress);
@@ -25,12 +32,20 @@ class TagButtons extends Component {
   }
   // change code above this line
   handleEnter() {
-    this.props.Refresh(this.keywords.value);
+    this.props.Refresh(this.state.searchText);
   }
   handleKeyPress(event) {
     if (event.keyCode === 13) {
       this.handleEnter();
     }
+  }
+  handleInputChange(event) {
+    this.setState({ searchText: event.target.value });
+  }
+
+  handleClear() {
+    this.setState({ searchText: '' });
+    this.props.Refresh('');
   }
 render() {
     const classes = makeStyles(theme => ({
@@ -39,13 +54,37 @@ render() {
         }
       }));
 return(
-        <div>
-             <input type="text" placeholder="Input keywords to search" ref={(c) => this.keywords = c} name="keywords" />
-      
-            <button type ="button" onClick={this.onSearch}>
+        <div style={{textAlign: 'center', marginBottom: 12}}>
+            <div style={{display: 'inline-flex', alignItems: 'center'}}>
+             <TextField
+               placeholder="Input keywords to search"
+               name="keywords"
+               variant="outlined"
+               size="small"
+               value={this.state.searchText}
+               onChange={this.handleInputChange}
+               style={{marginRight: 8}}
+               InputProps={{
+                 startAdornment: (
+                   <InputAdornment position="start">
+                     <SearchIcon />
+                   </InputAdornment>
+                 ),
+                 endAdornment: (
+                   <InputAdornment position="end">
+                     <IconButton size="small" onClick={this.handleClear} aria-label="清除">
+                       <ClearIcon />
+                     </IconButton>
+                   </InputAdornment>
+                 )
+               }}
+             />
+
+            <Button variant="contained" color="primary" size="small" onClick={this.onSearch}>
             Search
-            </button>
-            <Link to="/login/">Logout</Link>
+            </Button>
+            </div>
+            <div style={{marginTop: 8}}><Link to="/login/">Logout</Link></div>
         </div>
   );
   }
