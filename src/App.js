@@ -141,7 +141,7 @@ class App extends Component {
           pageSize: 50,
           search: false,
           searchFieldAlignment: 'right',
-          actionsColumnIndex: -1,
+          actionsColumnIndex: 4,
           addRowPosition: 'first'
         }}
         
