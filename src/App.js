@@ -137,8 +137,8 @@ class App extends Component {
         columns={mycolumns}
         data={this.state.bookmarks}
         options={{
-          pageSizeOptions: [10,30,50],
-          pageSize: 10,
+          pageSizeOptions: [50,100,200,500],
+          pageSize: 50,
           search: false,
           searchFieldAlignment: 'right',
           actionsColumnIndex: -1,
