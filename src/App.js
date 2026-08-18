@@ -116,7 +116,7 @@ class App extends Component {
   
     const mycolumns= [
       { title: 'Title', field: 'title', render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer">{rowData.title}</a>},
-      { title: 'URL', field: 'url',render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer">{rowData.url}</a> },
+      { title: 'URL', field: 'url', width: '30%', cellStyle: { whiteSpace: 'normal', wordBreak: 'break-all', maxWidth: 420, overflowWrap: 'anywhere' }, render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', maxWidth: '100%', wordBreak: 'break-all', overflowWrap: 'anywhere' }}>{rowData.url}</a> },
       { title: 'Date', field: 'modifydate'},
       { title: 'Tags', field: 'tags', render: rowData => 
       <div>{rowData.tags && rowData.tags.constructor === Array && rowData.tags.map((tag, index) => (
@@ -142,7 +142,9 @@ class App extends Component {
           search: false,
           searchFieldAlignment: 'right',
           actionsColumnIndex: 4,
-          addRowPosition: 'first'
+          addRowPosition: 'first',
+          maxBodyHeight: '75vh',
+          tableLayout: 'fixed'
         }}
         
         editable={{
