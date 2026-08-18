@@ -10,7 +10,9 @@ class App extends Component {
     this.state = {
       bookmarks : [],
       counter : 100,
-      selectedRows: []
+      selectedRows: [],
+      currentPage: 0,
+      pageSize: 50
     };
     this.tableRef = React.createRef();
     this.refreshBookmarks = this.refreshBookmarks.bind(this);
@@ -26,22 +28,30 @@ class App extends Component {
       if(typeof keywords != 'undefined' && keywords != '' && keywords != null ){
           keywords = encodeURIComponent(keywords);
           fetch('/api/link/search?q=' + keywords,requestOptions).then(res => res.json())
-        .then((data) => {this.setState({ bookmarks: data, selectedRows: [] });
+        .then((data) => {this.setState({ bookmarks: data, selectedRows: [], currentPage: 0 });
        });
       }else { // show bookmarks latest modified 100 bookmarks
         fetch('/api/link?limit=100',requestOptions).then(res => res.json())
-        .then((result) => {this.setState({ bookmarks: result, selectedRows: [] });
+        .then((result) => {this.setState({ bookmarks: result, selectedRows: [], currentPage: 0 });
        });
       }
   }
 
   selectCurrentPage() {
-    if (!this.tableRef.current || !this.tableRef.current.dataManager) {
+    if (!this.state.bookmarks.length) {
       return;
     }
 
-    const currentRows = this.tableRef.current.dataManager.getRenderData();
-    this.setState({ selectedRows: currentRows });
+    const start = this.state.currentPage * this.state.pageSize;
+    const end = start + this.state.pageSize;
+    const currentRows = this.state.bookmarks.slice(start, end);
+
+    const selectedMap = new Map(this.state.selectedRows.map(row => [row.id, row]));
+    currentRows.forEach((row) => {
+      selectedMap.set(row.id, row);
+    });
+
+    this.setState({ selectedRows: Array.from(selectedMap.values()) });
   }
 
   toggleRowSelected(row) {
@@ -203,7 +213,7 @@ class App extends Component {
         data={this.state.bookmarks}
         options={{
           pageSizeOptions: [50,100,200,500],
-          pageSize: 50,
+          pageSize: this.state.pageSize,
           search: false,
           searchFieldAlignment: 'right',
           actionsColumnIndex: 5,
@@ -211,6 +221,8 @@ class App extends Component {
           maxBodyHeight: '75vh',
           tableLayout: 'fixed'
         }}
+        onChangePage={(page) => this.setState({ currentPage: page })}
+        onChangeRowsPerPage={(pageSize) => this.setState({ pageSize, currentPage: 0 })}
         actions={[
           {
             icon: 'check',
