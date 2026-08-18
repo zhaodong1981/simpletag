@@ -18,6 +18,7 @@ class App extends Component {
     this.refreshBookmarks = this.refreshBookmarks.bind(this);
     this.selectCurrentPage = this.selectCurrentPage.bind(this);
     this.deleteSelectedBookmarks = this.deleteSelectedBookmarks.bind(this);
+    this.toggleSelectAllCurrentPage = this.toggleSelectAllCurrentPage.bind(this);
   }
 
   refreshBookmarks(keywords){
@@ -35,6 +36,38 @@ class App extends Component {
         .then((result) => {this.setState({ bookmarks: result, selectedRows: [], currentPage: 0 });
        });
       }
+  }
+
+  getCurrentPageRows() {
+    if (!this.state.bookmarks.length) return [];
+    const start = this.state.currentPage * this.state.pageSize;
+    const end = start + this.state.pageSize;
+    return this.state.bookmarks.slice(start, end);
+  }
+
+  isAllCurrentPageSelected() {
+    const currentRows = this.getCurrentPageRows();
+    if (!currentRows.length) return false;
+    const selectedIds = new Set((this.state.selectedRows || []).map(r => r.id));
+    return currentRows.every(r => selectedIds.has(r.id));
+  }
+
+  toggleSelectAllCurrentPage() {
+    const currentRows = this.getCurrentPageRows();
+    if (!currentRows.length) return;
+
+    const selectedRows = [...(this.state.selectedRows || [])];
+    const selectedIds = new Set(selectedRows.map(r => r.id));
+
+    if (this.isAllCurrentPageSelected()) {
+      // Deselect current page rows
+      const newSelected = selectedRows.filter(r => !currentRows.some(cr => cr.id === r.id));
+      this.setState({ selectedRows: newSelected });
+    } else {
+      // Select current page rows (avoid duplicates)
+      const toAdd = currentRows.filter(r => !selectedIds.has(r.id));
+      this.setState({ selectedRows: selectedRows.concat(toAdd) });
+    }
   }
 
   selectCurrentPage() {
@@ -178,7 +211,14 @@ class App extends Component {
   
     const mycolumns= [
       {
-        title: '选中',
+        title: (
+          <input
+            type="checkbox"
+            checked={this.isAllCurrentPageSelected()}
+            onChange={this.toggleSelectAllCurrentPage}
+            aria-label={'全选当前页'}
+          />
+        ),
         width: 70,
         sorting: false,
         render: rowData => (
