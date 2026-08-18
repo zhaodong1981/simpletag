@@ -54,9 +54,9 @@ render() {
         }
       }));
 return(
-        <div style={{position: 'relative', padding: 8}}>
-            <div style={{position: 'absolute', left: '50%', transform: 'translateX(-50%)', top: 8}}>
-              <div style={{display: 'inline-flex', alignItems: 'center'}}>
+        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 8, minHeight: 48}}>
+            <div style={{width: 180}} />
+            <div style={{display: 'inline-flex', alignItems: 'center'}}>
                <TextField
                  placeholder="Input keywords to search"
                  name="keywords"
@@ -85,9 +85,8 @@ return(
               <Button variant="contained" color="primary" size="small" onClick={this.onSearch} style={{minWidth: 120}}>
               Search
               </Button>
-              </div>
             </div>
-            <div style={{position: 'absolute', right: 12, top: 8}}><Link to="/login/">Logout</Link></div>
+            <div style={{paddingRight: 12}}><Link to="/login/">Logout</Link></div>
         </div>
   );
   }
