@@ -64,9 +64,10 @@ return(
                  size="small"
                  value={this.state.searchText}
                  onChange={this.handleInputChange}
-                 style={{marginRight: 8, width: 120}}
+                 style={{marginRight: 8, width: 120, minWidth: 120, boxSizing: 'border-box'}}
                  inputProps={{ maxLength: 500 }}
                  InputProps={{
+                   style: { height: 36 },
                    startAdornment: (
                      <InputAdornment position="start">
                        <SearchIcon />
