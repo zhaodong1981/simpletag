@@ -220,8 +220,8 @@ class App extends Component {
   render() {
   
     const mycolumns= [
-      { title: 'Title', field: 'title', width: '45%', render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer">{rowData.title}</a>},
-      { title: 'Tags', field: 'tags', width: '20%', render: rowData => 
+      { title: 'Title', field: 'title', width: 500, minWidth: 500, render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer">{rowData.title}</a>},
+      { title: 'Tags', field: 'tags', width: 180, minWidth: 180, maxWidth: 180, render: rowData => 
       <div>{rowData.tags && rowData.tags.constructor === Array && rowData.tags.map((tag, index) => (
           <a href={'/tag/tag.html#?name='+tag} target="_blank" rel="noopener noreferrer" style={{marginRight: '10px'}}>{tag}</a>
         ))}
