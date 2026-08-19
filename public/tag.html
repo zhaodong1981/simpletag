@@ -21,14 +21,12 @@
       <thead class="thead-light">
         <tr>
           <th scope="col">Title</th>
-          <th scope="col">URL</th>
           <th scope="col">Tags</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat = "bookmark in bookmarks">
           <td><a href="{{ bookmark.url }}" target="_blank" >{{ bookmark.title }}</a></td>
-          <td><a href="{{ bookmark.url }}" target="_blank" >{{ bookmark.url }}"</a></td>
           <td>
                   <span ng-repeat="tag in bookmark.tags"> 
                       <a href="/tag/tag.html#?name={{tag}}" target="_blank" >{{ tag }}</a> 
