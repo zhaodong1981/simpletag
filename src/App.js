@@ -291,7 +291,7 @@ class App extends Component {
           search: false,
           searchFieldAlignment: 'right',
           actionsColumnIndex: 3,
-          actionsCellStyle: {width: 100, minWidth: 100, maxWidth: 100, padding: 0},
+          actionsCellStyle: {width: 100, minWidth: 100, maxWidth: 100, padding: 0, display: 'flex', justifyContent: 'center', alignItems: 'center'},
           addRowPosition: 'first',
           maxBodyHeight: '75vh',
           tableLayout: 'auto'
