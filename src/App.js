@@ -291,11 +291,10 @@ class App extends Component {
           search: false,
           searchFieldAlignment: 'right',
           actionsColumnIndex: 3,
-          actionsHeaderStyle: {width: 100, minWidth: 100, maxWidth: 100, padding: 0},
           actionsCellStyle: {width: 100, minWidth: 100, maxWidth: 100, padding: 0},
           addRowPosition: 'first',
           maxBodyHeight: '75vh',
-          tableLayout: 'fixed'
+          tableLayout: 'auto'
         }}
         onChangePage={(page) => this.setState({ currentPage: page })}
         onChangeRowsPerPage={(pageSize) => this.setState({ pageSize, currentPage: 0 })}
