@@ -220,6 +220,14 @@ class App extends Component {
   render() {
   
     const mycolumns= [
+      { title: 'Title', field: 'title', render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer">{rowData.title}</a>},
+      { title: 'Tags', field: 'tags', render: rowData => 
+      <div>{rowData.tags && rowData.tags.constructor === Array && rowData.tags.map((tag, index) => (
+          <a href={'/tag/tag.html#?name='+tag} target="_blank" rel="noopener noreferrer" style={{marginRight: '10px'}}>{tag}</a>
+        ))}
+      </div>
+      },
+      { title: 'Date', field: 'modifydate'},
       {
         title: (
           <div style={{display: 'flex', alignItems: 'center'}}>
@@ -241,6 +249,10 @@ class App extends Component {
           </div>
         ),
         width: 70,
+        minWidth: 70,
+        maxWidth: 70,
+        headerStyle: {width: 70, minWidth: 70, maxWidth: 70, padding: 0},
+        cellStyle: {width: 70, minWidth: 70, maxWidth: 70, padding: 0},
         draggable: false,
         sorting: false,
         render: rowData => (
@@ -251,14 +263,6 @@ class App extends Component {
             aria-label={'select row ' + rowData.title}
           />
         )
-      },
-      { title: 'Title', field: 'title', render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer">{rowData.title}</a>},
-      { title: 'Date', field: 'modifydate'},
-      { title: 'Tags', field: 'tags', render: rowData => 
-      <div>{rowData.tags && rowData.tags.constructor === Array && rowData.tags.map((tag, index) => (
-          <a href={'/tag/tag.html#?name='+tag} target="_blank" rel="noopener noreferrer" style={{marginRight: '10px'}}>{tag}</a>
-        ))}
-      </div>
       }
     ];
   
@@ -277,7 +281,7 @@ class App extends Component {
           pageSize: this.state.pageSize,
           search: false,
           searchFieldAlignment: 'right',
-          actionsColumnIndex: 5,
+          actionsColumnIndex: 3,
           addRowPosition: 'first',
           maxBodyHeight: '75vh',
           tableLayout: 'fixed'
