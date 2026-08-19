@@ -220,14 +220,23 @@ class App extends Component {
   render() {
   
     const mycolumns= [
-      { title: 'Title', field: 'title', render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer">{rowData.title}</a>},
-      { title: 'Tags', field: 'tags', render: rowData => 
+      { title: 'Title', field: 'title', width: '45%', render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer">{rowData.title}</a>},
+      { title: 'Tags', field: 'tags', width: '20%', render: rowData => 
       <div>{rowData.tags && rowData.tags.constructor === Array && rowData.tags.map((tag, index) => (
           <a href={'/tag/tag.html#?name='+tag} target="_blank" rel="noopener noreferrer" style={{marginRight: '10px'}}>{tag}</a>
         ))}
       </div>
       },
-      { title: 'Date', field: 'modifydate'},
+      {
+        title: 'Date',
+        field: 'modifydate',
+        width: 105,
+        minWidth: 105,
+        maxWidth: 105,
+        headerStyle: {width: 105, minWidth: 105, maxWidth: 105},
+        cellStyle: {width: 105, minWidth: 105, maxWidth: 105},
+        render: rowData => rowData.modifydate ? String(rowData.modifydate).slice(0, 10) : ''
+      },
       {
         title: (
           <div style={{display: 'flex', alignItems: 'center'}}>
@@ -282,6 +291,8 @@ class App extends Component {
           search: false,
           searchFieldAlignment: 'right',
           actionsColumnIndex: 3,
+          actionsHeaderStyle: {width: 100, minWidth: 100, maxWidth: 100, padding: 0},
+          actionsCellStyle: {width: 100, minWidth: 100, maxWidth: 100, padding: 0},
           addRowPosition: 'first',
           maxBodyHeight: '75vh',
           tableLayout: 'fixed'
