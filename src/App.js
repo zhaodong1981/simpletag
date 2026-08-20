@@ -6,6 +6,31 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import TagButton from './TagButtons';
 import {userService} from './util/user.service'
 
+class SelectionHeader extends Component {
+  render() {
+    const {app} = this.props;
+    return (
+      <div style={{display: 'flex', alignItems: 'center'}}>
+        <input
+          type="checkbox"
+          checked={app.isAllCurrentPageSelected()}
+          onChange={app.toggleSelectAllCurrentPage}
+          aria-label={'全选当前页'}
+        />
+        <IconButton
+          onClick={app.deleteSelectedBookmarks}
+          disabled={app.state.selectedRows.length === 0}
+          aria-label="删除选中"
+          size="small"
+          style={{marginLeft: 8}}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </div>
+    );
+  }
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -21,6 +46,8 @@ class App extends Component {
     this.selectCurrentPage = this.selectCurrentPage.bind(this);
     this.deleteSelectedBookmarks = this.deleteSelectedBookmarks.bind(this);
     this.toggleSelectAllCurrentPage = this.toggleSelectAllCurrentPage.bind(this);
+    this.refreshSelectionHeader = this.refreshSelectionHeader.bind(this);
+    this.selectionHeaderRef = React.createRef();
     this.columns = [
       { title: 'Title', field: 'title', width: 500, minWidth: 500, render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer">{rowData.title}</a>},
       { title: 'Tags', field: 'tags', width: 180, minWidth: 180, maxWidth: 180, render: rowData =>
@@ -41,23 +68,7 @@ class App extends Component {
       },
       {
         title: (
-          <div style={{display: 'flex', alignItems: 'center'}}>
-            <input
-              type="checkbox"
-              checked={this.isAllCurrentPageSelected()}
-              onChange={this.toggleSelectAllCurrentPage}
-              aria-label={'全选当前页'}
-            />
-            <IconButton
-              onClick={this.deleteSelectedBookmarks}
-              disabled={this.state.selectedRows.length === 0}
-              aria-label="删除选中"
-              size="small"
-              style={{marginLeft: 8}}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </div>
+          <SelectionHeader ref={this.selectionHeaderRef} app={this} />
         ),
         width: 70,
         minWidth: 70,
@@ -85,18 +96,18 @@ class App extends Component {
     };
       if (keywords === '__all__') {
         fetch('/api/link',requestOptions).then(res => res.json())
-        .then((data) => {this.setState({ bookmarks: data, selectedRows: [], currentPage: 0 });
+        .then((data) => {this.setState({ bookmarks: data, selectedRows: [], currentPage: 0 }, this.refreshSelectionHeader);
        });
         return;
       }
       if(typeof keywords != 'undefined' && keywords != '' && keywords != null ){
           keywords = encodeURIComponent(keywords);
           fetch('/api/link/search?q=' + keywords,requestOptions).then(res => res.json())
-        .then((data) => {this.setState({ bookmarks: data, selectedRows: [], currentPage: 0 });
+        .then((data) => {this.setState({ bookmarks: data, selectedRows: [], currentPage: 0 }, this.refreshSelectionHeader);
        });
       }else { // show bookmarks latest modified 100 bookmarks
         fetch('/api/link?limit=100',requestOptions).then(res => res.json())
-        .then((result) => {this.setState({ bookmarks: result, selectedRows: [], currentPage: 0 });
+        .then((result) => {this.setState({ bookmarks: result, selectedRows: [], currentPage: 0 }, this.refreshSelectionHeader);
        });
       }
   }
@@ -115,6 +126,12 @@ class App extends Component {
     return currentRows.every(r => selectedIds.has(r.id));
   }
 
+  refreshSelectionHeader() {
+    if (this.selectionHeaderRef.current) {
+      this.selectionHeaderRef.current.forceUpdate();
+    }
+  }
+
   toggleSelectAllCurrentPage() {
     const currentRows = this.getCurrentPageRows();
     if (!currentRows.length) return;
@@ -125,11 +142,11 @@ class App extends Component {
     if (this.isAllCurrentPageSelected()) {
       // Deselect current page rows
       const newSelected = selectedRows.filter(r => !currentRows.some(cr => cr.id === r.id));
-      this.setState({ selectedRows: newSelected });
+      this.setState({ selectedRows: newSelected }, this.refreshSelectionHeader);
     } else {
       // Select current page rows (avoid duplicates)
       const toAdd = currentRows.filter(r => !selectedIds.has(r.id));
-      this.setState({ selectedRows: selectedRows.concat(toAdd) });
+      this.setState({ selectedRows: selectedRows.concat(toAdd) }, this.refreshSelectionHeader);
     }
   }
 
@@ -149,7 +166,7 @@ class App extends Component {
       selectedMap.set(row.id, row);
     });
 
-    this.setState({ selectedRows: Array.from(selectedMap.values()) });
+    this.setState({ selectedRows: Array.from(selectedMap.values()) }, this.refreshSelectionHeader);
   }
 
   toggleRowSelected(row) {
@@ -162,7 +179,7 @@ class App extends Component {
       selectedRows.push(row);
     }
 
-    this.setState({ selectedRows });
+    this.setState({ selectedRows }, this.refreshSelectionHeader);
   }
 
   deleteSelectedBookmarks() {
@@ -183,7 +200,7 @@ class App extends Component {
 
     Promise.all(selectedRows.map(row => this.deleteBookmark(row.id)))
       .then(() => {
-        this.setState({ selectedRows: [] });
+        this.setState({ selectedRows: [] }, this.refreshSelectionHeader);
         this.refreshBookmarks();
       })
       .catch((error) => {
