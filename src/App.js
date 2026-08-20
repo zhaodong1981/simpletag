@@ -21,6 +21,61 @@ class App extends Component {
     this.selectCurrentPage = this.selectCurrentPage.bind(this);
     this.deleteSelectedBookmarks = this.deleteSelectedBookmarks.bind(this);
     this.toggleSelectAllCurrentPage = this.toggleSelectAllCurrentPage.bind(this);
+    this.columns = [
+      { title: 'Title', field: 'title', width: 500, minWidth: 500, render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer">{rowData.title}</a>},
+      { title: 'Tags', field: 'tags', width: 180, minWidth: 180, maxWidth: 180, render: rowData =>
+      <div>{rowData.tags && rowData.tags.constructor === Array && rowData.tags.map((tag, index) => (
+          <a href={'/tag/tag.html#?name='+tag} target="_blank" rel="noopener noreferrer" style={{marginRight: '10px'}}>{tag}</a>
+        ))}
+      </div>
+      },
+      {
+        title: 'Date',
+        field: 'modifydate',
+        width: 105,
+        minWidth: 105,
+        maxWidth: 105,
+        headerStyle: {width: 105, minWidth: 105, maxWidth: 105},
+        cellStyle: {width: 105, minWidth: 105, maxWidth: 105},
+        render: rowData => rowData.modifydate ? String(rowData.modifydate).slice(0, 10) : ''
+      },
+      {
+        title: (
+          <div style={{display: 'flex', alignItems: 'center'}}>
+            <input
+              type="checkbox"
+              checked={this.isAllCurrentPageSelected()}
+              onChange={this.toggleSelectAllCurrentPage}
+              aria-label={'全选当前页'}
+            />
+            <IconButton
+              onClick={this.deleteSelectedBookmarks}
+              disabled={this.state.selectedRows.length === 0}
+              aria-label="删除选中"
+              size="small"
+              style={{marginLeft: 8}}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </div>
+        ),
+        width: 70,
+        minWidth: 70,
+        maxWidth: 70,
+        headerStyle: {width: 70, minWidth: 70, maxWidth: 70, padding: 0},
+        cellStyle: {width: 70, minWidth: 70, maxWidth: 70, padding: 0},
+        draggable: false,
+        sorting: false,
+        render: rowData => (
+          <input
+            type="checkbox"
+            checked={this.state.selectedRows.some(item => item.id === rowData.id)}
+            onChange={() => this.toggleRowSelected(rowData)}
+            aria-label={'select row ' + rowData.title}
+          />
+        )
+      }
+    ];
   }
 
   refreshBookmarks(keywords){
@@ -218,63 +273,6 @@ class App extends Component {
     alert(event.target.value);
   }
   render() {
-  
-    const mycolumns= [
-      { title: 'Title', field: 'title', width: 500, minWidth: 500, render: rowData => <a href={rowData.url} target="_blank" rel="noopener noreferrer">{rowData.title}</a>},
-      { title: 'Tags', field: 'tags', width: 180, minWidth: 180, maxWidth: 180, render: rowData => 
-      <div>{rowData.tags && rowData.tags.constructor === Array && rowData.tags.map((tag, index) => (
-          <a href={'/tag/tag.html#?name='+tag} target="_blank" rel="noopener noreferrer" style={{marginRight: '10px'}}>{tag}</a>
-        ))}
-      </div>
-      },
-      {
-        title: 'Date',
-        field: 'modifydate',
-        width: 105,
-        minWidth: 105,
-        maxWidth: 105,
-        headerStyle: {width: 105, minWidth: 105, maxWidth: 105},
-        cellStyle: {width: 105, minWidth: 105, maxWidth: 105},
-        render: rowData => rowData.modifydate ? String(rowData.modifydate).slice(0, 10) : ''
-      },
-      {
-        title: (
-          <div style={{display: 'flex', alignItems: 'center'}}>
-            <input
-              type="checkbox"
-              checked={this.isAllCurrentPageSelected()}
-              onChange={this.toggleSelectAllCurrentPage}
-              aria-label={'全选当前页'}
-            />
-            <IconButton
-              onClick={this.deleteSelectedBookmarks}
-              disabled={this.state.selectedRows.length === 0}
-              aria-label="删除选中"
-              size="small"
-              style={{marginLeft: 8}}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </div>
-        ),
-        width: 70,
-        minWidth: 70,
-        maxWidth: 70,
-        headerStyle: {width: 70, minWidth: 70, maxWidth: 70, padding: 0},
-        cellStyle: {width: 70, minWidth: 70, maxWidth: 70, padding: 0},
-        draggable: false,
-        sorting: false,
-        render: rowData => (
-          <input
-            type="checkbox"
-            checked={this.state.selectedRows.some(item => item.id === rowData.id)}
-            onChange={() => this.toggleRowSelected(rowData)}
-            aria-label={'select row ' + rowData.title}
-          />
-        )
-      }
-    ];
-  
     return (
       
       <div className="App">
@@ -283,7 +281,7 @@ class App extends Component {
       <MaterialTable
         title="My Bookmarks"
         tableRef={this.tableRef}
-        columns={mycolumns}
+        columns={this.columns}
         data={this.state.bookmarks}
         options={{
           pageSizeOptions: [50,100,200,500],
