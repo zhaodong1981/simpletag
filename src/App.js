@@ -200,8 +200,9 @@ class App extends Component {
 
     Promise.all(selectedRows.map(row => this.deleteBookmark(row.id)))
       .then(() => {
-        this.setState({ selectedRows: [] }, this.refreshSelectionHeader);
-        this.refreshBookmarks();
+        const deletedIds = new Set(selectedRows.map(row => row.id));
+        const bookmarks = this.state.bookmarks.filter(b => !deletedIds.has(b.id));
+        this.setState({ bookmarks, selectedRows: [] }, this.refreshSelectionHeader);
       })
       .catch((error) => {
         console.error('Error during delete selected bookmarks:', error);
