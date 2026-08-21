@@ -198,11 +198,22 @@ class App extends Component {
       return;
     }
 
+    // material-table resets its internal sort whenever the `data` prop changes,
+    // so capture the current sort order here and restore it after the update.
+    const table = this.tableRef.current;
+    const orderBy = table ? table.state.orderBy : undefined;
+    const orderDirection = table ? table.state.orderDirection : undefined;
+
     Promise.all(selectedRows.map(row => this.deleteBookmark(row.id)))
       .then(() => {
         const deletedIds = new Set(selectedRows.map(row => row.id));
         const bookmarks = this.state.bookmarks.filter(b => !deletedIds.has(b.id));
-        this.setState({ bookmarks, selectedRows: [] }, this.refreshSelectionHeader);
+        this.setState({ bookmarks, selectedRows: [] }, () => {
+          this.refreshSelectionHeader();
+          if (table && orderDirection && orderBy !== undefined && orderBy !== -1) {
+            table.onChangeOrder(orderBy, orderDirection);
+          }
+        });
       })
       .catch((error) => {
         console.error('Error during delete selected bookmarks:', error);
